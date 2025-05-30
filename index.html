@@ -1,68 +1,52 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
-</head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;URL Safety Scanner&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Check if a URL is Safe&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="url" placeholder="https://example.com" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="scan()"&gt;Scan&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;pre id="output"&gt;&lt;/pre&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>async function scan() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const url = document.getElementById("url").value;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById("output").textContent = "Scanning...";</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const vt = await fetch(</p>
-<p class="p1"><span class="Apple-converted-space">          </span>`https://virustotal-proxy.josh-phillips-llc.workers.dev?url=${encodeURIComponent(url)}`</p>
-<p class="p1"><span class="Apple-converted-space">        </span>).then(r =&gt; r.json());</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const sb = await fetch(</p>
-<p class="p1"><span class="Apple-converted-space">          </span>`https://safe-browsing-proxy.josh-phillips-llc.workers.dev?url=${encodeURIComponent(url)}`</p>
-<p class="p1"><span class="Apple-converted-space">        </span>).then(r =&gt; r.json());</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const gpt = await fetch("https://api.openai.com/v1/chat/completions", {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>method: "POST",</p>
-<p class="p1"><span class="Apple-converted-space">          </span>headers: {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>"Authorization": "Bearer YOUR_OPENAI_API_KEY",</p>
-<p class="p1"><span class="Apple-converted-space">            </span>"Content-Type": "application/json"</p>
-<p class="p1"><span class="Apple-converted-space">          </span>},</p>
-<p class="p1"><span class="Apple-converted-space">          </span>body: JSON.stringify({</p>
-<p class="p1"><span class="Apple-converted-space">            </span>model: "gpt-4",</p>
-<p class="p1"><span class="Apple-converted-space">            </span>messages: [</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{</p>
-<p class="p1"><span class="Apple-converted-space">                </span>role: "system",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>content: "You are a security analyst. Use the following VirusTotal and Safe Browsing results to summarize whether a URL is safe, and explain why."</p>
-<p class="p1"><span class="Apple-converted-space">              </span>},</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{</p>
-<p class="p1"><span class="Apple-converted-space">                </span>role: "user",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>content: `URL: ${url}\n\nVirusTotal: ${JSON.stringify(vt)}\n\nSafeBrowsing: ${JSON.stringify(sb)}`</p>
-<p class="p1"><span class="Apple-converted-space">              </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>]</p>
-<p class="p1"><span class="Apple-converted-space">          </span>})</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}).then(r =&gt; r.json());</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById("output").textContent =</p>
-<p class="p1"><span class="Apple-converted-space">          </span>gpt.choices?.[0]?.message?.content || "Failed to analyze.";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
-</body>
+  <head>
+    <title>URL Safety Scanner</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <h1>Check if a URL is Safe</h1>
+    <input type="text" id="url" placeholder="https://example.com" />
+    <button onclick="scan()">Scan</button>
+    <pre id="output"></pre>
+
+    <script>
+      async function scan() {
+        const url = document.getElementById("url").value;
+        document.getElementById("output").textContent = "Scanning...";
+
+        const vt = await fetch(
+          `https://virustotal-proxy.josh-phillips-llc.workers.dev?url=${encodeURIComponent(url)}`
+        ).then(r => r.json());
+
+        const sb = await fetch(
+          `https://safe-browsing-proxy.josh-phillips-llc.workers.dev?url=${encodeURIComponent(url)}`
+        ).then(r => r.json());
+
+        const gpt = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer YOUR_OPENAI_API_KEY",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "gpt-4",
+            messages: [
+              {
+                role: "system",
+                content: "You are a security analyst. Use the following VirusTotal and Safe Browsing results to summarize whether a URL is safe, and explain why."
+              },
+              {
+                role: "user",
+                content: `URL: ${url}\n\nVirusTotal: ${JSON.stringify(vt)}\n\nSafeBrowsing: ${JSON.stringify(sb)}`
+              }
+            ]
+          })
+        }).then(r => r.json());
+
+        document.getElementById("output").textContent =
+          gpt.choices?.[0]?.message?.content || "Failed to analyze.";
+      }
+    </script>
+  </body>
 </html>
